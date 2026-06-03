@@ -1,0 +1,24 @@
+<div class="utility">
+  <div class="wrap">
+    <span class="tag">{{ site.nombreLargo }} · Argentina</span>
+    <div class="u-right">
+      <a href="/#news-anchor">Newsletter</a>
+      <a href="/nosotros/">Contacto</a>
+      <span class="lang"><b>ES</b><span>/</span><a href="#">EN</a></span>
+    </div>
+  </div>
+</div>
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img src="/assets/logo.png" alt="{{ site.nombre }}">
+      <span class="wm"><b>{{ site.nombre }}</b><small>{{ site.tagline }}</small></span>
+    </a>
+    <nav class="nav">
+      {% for item in site.nav %}
+      <a href="{{ item.url }}"{% if item.url == page.url %} class="active"{% endif %}>{{ item.label }}{% if item.caret %}<span class="car">▾</span>{% endif %}</a>
+      {% endfor %}
+      <span class="srch">🔍</span>
+    </nav>
+  </div>
+</header>

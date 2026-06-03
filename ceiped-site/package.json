@@ -1,0 +1,13 @@
+{
+  "name": "ceiped-web",
+  "version": "1.0.0",
+  "description": "Sitio del Centro de Estudios Interdisciplinarios para el Desarrollo (CEIPeD)",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  }
+}

@@ -1,0 +1,51 @@
+---
+layout: base.njk
+permalink: "/publicaciones/"
+title: "Publicaciones"
+---
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Dirección de Investigaciones</p>
+    <h1>Publicaciones</h1>
+    <p class="dek">Análisis, documentos de trabajo y notas de investigación sobre las políticas públicas que definen el futuro de Argentina.</p>
+  </div>
+</section>
+<div class="wrap">
+  <div class="filterbar">
+    <a class="chip on" href="/publicaciones/">Todas</a>
+    {% for a in collections.areas %}
+    <a class="chip" href="/areas/{{ a.fileSlug }}/">{{ a.data.nombre }}</a>
+    {% endfor %}
+  </div>
+  <div class="pub-layout">
+    <div class="pub-list">
+      {% for p in collections.publicaciones %}
+      {% set a = collections.equipo | findItem(p.data.autor) %}
+      <a class="pub-item" href="{{ p.url }}">
+        {% if p.data.portada %}<img src="{{ p.data.portada }}" alt="" style="width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)">{% else %}<div class="ph" style="aspect-ratio:3/2;width:100%"><span>{{ p.data.area }}</span></div>{% endif %}
+        <div>
+          <p class="eyebrow">{{ p.data.area }}</p>
+          <h3>{{ p.data.title }}</h3>
+          <p>{{ p.data.resumen }}</p>
+          <div class="meta">{{ a.data.nombre if a else p.data.autor }} · {{ p.data.fecha | fecha }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <aside>
+      <div class="side-card">
+        <h4>Por área</h4>
+        <ul>
+          {% for a in collections.areas %}
+          <li><a href="/areas/{{ a.fileSlug }}/">{{ a.data.nombre }} <span>{{ collections.publicaciones | byArea(a.data.nombre) | length }}</span></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="side-card nl">
+        <h4>Newsletter</h4>
+        <p>Recibí cada nueva publicación en tu correo.</p>
+        <form onsubmit="return false"><input type="email" placeholder="tu@correo.com"><button class="btn" style="width:100%;justify-content:center">Suscribirme</button></form>
+      </div>
+    </aside>
+  </div>
+</div>

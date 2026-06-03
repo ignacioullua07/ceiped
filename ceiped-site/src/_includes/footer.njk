@@ -1,0 +1,32 @@
+<footer class="foot">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand"><img src="/assets/logo.png" alt="{{ site.nombre }}" style="width:40px;height:40px"><span class="wm"><b>{{ site.nombre }}</b><small>{{ site.tagline }}</small></span></div>
+        <p>{{ site.descripcion }}</p>
+      </div>
+      <div><h4>Áreas</h4>
+        <ul>
+          {% for a in collections.areas | limit(4) %}
+          <li><a href="/areas/{{ a.fileSlug }}/">{{ a.data.nombre }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div><h4>Instituto</h4>
+        <ul>
+          <li><a href="/nosotros/">Sobre nosotros</a></li>
+          <li><a href="/equipo/">Equipo</a></li>
+          <li><a href="/publicaciones/">Publicaciones</a></li>
+          <li><a href="/#programas">Programas</a></li>
+        </ul>
+      </div>
+      <div class="nl"><h4>Newsletter</h4>
+        <form onsubmit="return false"><input type="email" placeholder="tu@correo.com"><button class="btn light" style="width:100%;justify-content:center">Suscribirme</button></form>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>{{ site.nombreLargo }} © {{ site.anio }}</span>
+      <div class="social"><a href="#">in</a><a href="#">✕</a></div>
+    </div>
+  </div>
+</footer>

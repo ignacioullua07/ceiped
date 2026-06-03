@@ -1,0 +1,112 @@
+---
+layout: base.njk
+permalink: "/"
+---
+{% set pubs = collections.publicaciones %}
+{% set featured = (pubs | destacadas | first) or (pubs | first) %}
+{% set resto = pubs | exclude(featured.fileSlug) %}
+{% set recientes = resto | limit(4) %}
+{% set secundarias = resto | sliceRange(4, 7) %}
+
+<section class="lead-sec">
+  <div class="wrap">
+    <div class="lead-grid">
+      {% if featured %}
+      {% set autor = collections.equipo | findItem(featured.data.autor) %}
+      <a class="lead" href="{{ featured.url }}">
+        {% if featured.data.portada %}
+        <img src="{{ featured.data.portada }}" alt="{{ featured.data.title }}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--line)">
+        {% else %}
+        <div class="ph" style="aspect-ratio:16/9;width:100%"><span>{{ featured.data.area }}</span></div>
+        {% endif %}
+        <p class="eyebrow">{{ featured.data.area }}</p>
+        <h1>{{ featured.data.title }}</h1>
+        <p class="dek">{{ featured.data.resumen }}</p>
+        <div class="byline">
+          {% if autor and autor.data.foto %}<img class="av" src="{{ autor.data.foto }}" alt="" style="object-fit:cover">{% else %}<span class="av"></span>{% endif %}
+          <div class="by-t"><b>{{ autor.data.nombre if autor else featured.data.autor }}</b><div class="meta">Dirección de Investigaciones{% if featured.data.tiempo_lectura %} · {{ featured.data.tiempo_lectura }} min de lectura{% endif %}</div></div>
+        </div>
+      </a>
+      {% endif %}
+
+      <aside class="rail">
+        <h2>Lo más reciente</h2>
+        {% for p in recientes %}
+        <a class="item" href="{{ p.url }}">
+          <p class="eyebrow">{{ p.data.area }}</p>
+          <h3>{{ p.data.title }}</h3>
+          <div class="meta">{{ p.data.fecha | fecha }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+        </a>
+        {% endfor %}
+        <a class="tlink" href="/publicaciones/">Ver todas las publicaciones →</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% if secundarias | length %}
+<section class="sec-row">
+  <div class="wrap">
+    <div class="cards3">
+      {% for p in secundarias %}
+      {% set a = collections.equipo | findItem(p.data.autor) %}
+      <a class="card" href="{{ p.url }}">
+        {% if p.data.portada %}<img src="{{ p.data.portada }}" alt="" style="width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)">{% else %}<div class="ph" style="aspect-ratio:3/2;width:100%"><span>{{ p.data.area }}</span></div>{% endif %}
+        <p class="eyebrow">{{ p.data.area }}</p>
+        <h3>{{ p.data.title }}</h3>
+        <div class="meta">{{ a.data.nombre if a else p.data.autor }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="areas" id="areas">
+  <div class="wrap">
+    <div class="head">
+      <div><p class="eyebrow">Nuestro trabajo</p><h2>Áreas de investigación</h2></div>
+      <a class="tlink" href="/publicaciones/">Ver todas las publicaciones →</a>
+    </div>
+    <div class="area-grid">
+      {% for a in collections.areas %}
+      <a class="area" href="/areas/{{ a.fileSlug }}/">
+        <div class="n">{{ "0" if a.data.numero < 10 }}{{ a.data.numero }}</div>
+        <h3>{{ a.data.nombre }}</h3>
+        <p>{{ a.data.resumen }}</p>
+        <span class="arr">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="programs" id="programas">
+  <div class="wrap">
+    <p class="eyebrow">Iniciativas</p>
+    <h2>Programas</h2>
+    <div class="prog-grid">
+      {% for pr in collections.programas %}
+      <a class="prog{% if loop.first %} feat{% endif %}" href="/programas/{{ pr.fileSlug }}/">
+        <p class="eyebrow">{% if loop.first %}Programa insignia{% else %}{{ pr.data.estado }}{% endif %}</p>
+        <h3>{{ pr.data.nombre }}</h3>
+        <p>{{ pr.data.resumen }}</p>
+        <div class="foot"><span class="tlink">Conocer el programa →</span></div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="news" id="news-anchor">
+  <div class="wrap">
+    <div class="nt">
+      <h2>Recibí nuestro trabajo en tu correo</h2>
+      <p>Investigaciones, análisis y novedades del CEIPeD. Sin spam.</p>
+    </div>
+    <form onsubmit="return false">
+      <input type="email" placeholder="tu@correo.com">
+      <button class="btn" type="submit">Suscribirme</button>
+    </form>
+  </div>
+</section>

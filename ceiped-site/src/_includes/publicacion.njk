@@ -1,0 +1,64 @@
+---
+layout: base.njk
+---
+{% set autorSlug = autor %}
+{% set autor = collections.equipo | findItem(autorSlug) %}
+{% set areaItem = collections.areas | findByName(area) %}
+<section class="art-top">
+  <div class="wrap">
+    <nav class="crumb"><a href="/">Inicio</a><span class="sep">›</span><a href="/publicaciones/">Publicaciones</a><span class="sep">›</span>{{ area }}</nav>
+    <div class="art-head">
+      <p class="eyebrow">{{ area }}</p>
+      <h1>{{ title }}</h1>
+      <p class="dek">{{ resumen }}</p>
+    </div>
+    <div class="art-byline">
+      {% if autor and autor.data.foto %}<img class="av" src="{{ autor.data.foto }}" alt="" style="object-fit:cover">{% else %}<span class="av"></span>{% endif %}
+      <div class="bt">
+        {% if autor %}<a href="{{ autor.url }}"><b>{{ autor.data.nombre }}</b></a>{% else %}<b>{{ autorSlug }}</b>{% endif %}
+        <div class="meta">Dirección de Investigaciones · {{ fecha | fechaLarga }}{% if tiempo_lectura %} · {{ tiempo_lectura }} min de lectura{% endif %}</div>
+      </div>
+      <div class="share"><a href="#">in</a><a href="#">✕</a><a href="#">✉</a></div>
+    </div>
+  </div>
+</section>
+
+{% if portada %}
+<div class="wrap"><figure class="art-cover"><img src="{{ portada }}" alt="{{ title }}" style="width:100%;aspect-ratio:16/9;object-fit:cover"></figure></div>
+{% if epigrafe %}<div class="wrap"><p class="art-cap">{{ epigrafe }}</p></div>{% endif %}
+{% endif %}
+
+<article class="art-body">
+{{ content | safe }}
+</article>
+
+{% if autor %}
+<div class="author-card">
+  {% if autor.data.foto %}<img class="av" src="{{ autor.data.foto }}" alt="" style="object-fit:cover">{% else %}<span class="av"></span>{% endif %}
+  <div class="at">
+    <p class="eyebrow">Autor/a</p>
+    <b>{{ autor.data.nombre }}</b>
+    <p>{{ autor.data.rol }}.</p>
+  </div>
+  <a class="btn ghost" href="{{ autor.url }}">Ver perfil</a>
+</div>
+{% endif %}
+
+{% set relacionadas = collections.publicaciones | byArea(area) | exclude(page.fileSlug) | limit(3) %}
+{% if relacionadas | length %}
+<section class="related">
+  <div class="wrap">
+    <h2>Seguir leyendo</h2>
+    <div class="cards3">
+      {% for p in relacionadas %}
+      <a class="card" href="{{ p.url }}">
+        {% if p.data.portada %}<img src="{{ p.data.portada }}" alt="" style="width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)">{% else %}<div class="ph" style="aspect-ratio:3/2;width:100%"><span>{{ p.data.area }}</span></div>{% endif %}
+        <p class="eyebrow">{{ p.data.area }}</p>
+        <h3>{{ p.data.title }}</h3>
+        <div class="meta">{{ p.data.fecha | fecha }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

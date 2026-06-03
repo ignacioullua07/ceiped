@@ -1,0 +1,51 @@
+---
+layout: base.njk
+---
+{% set pubs = collections.publicaciones | byArea(nombre) %}
+{% set invs = collections.equipo | byAreaTag(nombre) %}
+<section class="page-head dark">
+  <div class="wrap">
+    <p class="eyebrow">Área de investigación</p>
+    <h1>{{ nombre }}</h1>
+    {% if resumen %}<p class="dek">{{ resumen }}</p>{% endif %}
+    <div class="area-stats">
+      <div class="st"><b>{{ pubs | length }}</b><span>Publicaciones</span></div>
+      <div class="st"><b>{{ invs | length }}</b><span>Investigadores</span></div>
+    </div>
+  </div>
+</section>
+<div class="wrap">
+  {% if content %}
+  <section class="section-block"><div class="bio" style="max-width:64ch;font-family:var(--serif);font-size:18px;line-height:1.6">{{ content | safe }}</div></section>
+  {% endif %}
+
+  {% if invs | length %}
+  <section class="section-block">
+    <div class="block-head"><h2>Investigadores del área</h2><a class="tlink" href="/equipo/">Ver todo el equipo →</a></div>
+    <div class="people-row">
+      {% for m in invs | limit(4) %}
+      <a class="person round" href="{{ m.url }}">
+        {% if m.data.foto %}<img class="pic" src="{{ m.data.foto }}" alt="{{ m.data.nombre }}" style="object-fit:cover">{% else %}<span class="pic"></span>{% endif %}
+        <b>{{ m.data.nombre }}</b><div class="role">{{ m.data.rol }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if pubs | length %}
+  <section class="section-block">
+    <div class="block-head"><h2>Publicaciones del área</h2><a class="tlink" href="/publicaciones/">Ver todas →</a></div>
+    <div class="cards3">
+      {% for p in pubs | limit(6) %}
+      <a class="card" href="{{ p.url }}">
+        {% if p.data.portada %}<img src="{{ p.data.portada }}" alt="" style="width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)">{% else %}<div class="ph" style="aspect-ratio:3/2;width:100%"><span>{{ p.data.area }}</span></div>{% endif %}
+        <p class="eyebrow">{{ p.data.area }}</p>
+        <h3>{{ p.data.title }}</h3>
+        <div class="meta">{{ p.data.fecha | fecha }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>

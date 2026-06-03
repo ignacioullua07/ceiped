@@ -1,0 +1,136 @@
+# ============================================================
+# Decap CMS · Configuración del panel de contenidos — CEIPeD
+# ------------------------------------------------------------
+# Login: GitHub vía DecapBridge (gratis). Los editores entran
+# con email/contraseña; NO necesitan cuenta de GitHub.
+# Hosting recomendado: Cloudflare Pages (gratis).
+# ============================================================
+
+backend:
+  name: git-gateway
+  repo: TU-USUARIO/ceiped-web                                   # ← tu repositorio en GitHub
+  branch: main
+  identity_url: https://auth.decapbridge.com/sites/TU-SITE-ID   # ← lo da el panel de DecapBridge
+  gateway_url: https://gateway.decapbridge.com                  # ← lo da el panel de DecapBridge
+
+# Flujo de borradores con revisión: Borrador → En revisión → Listo → Publicado.
+# Si preferís publicar directo, borrá esta línea.
+publish_mode: editorial_workflow
+
+# Carpeta donde se suben las imágenes (portadas, fotos del equipo, etc.)
+media_folder: "src/assets/uploads"
+public_folder: "/assets/uploads"
+
+# Sitio bilingüe; español por defecto.
+locale: "es"
+
+collections:
+  # ───────────────────────── PUBLICACIONES ─────────────────────────
+  - name: "publicaciones"
+    label: "Publicaciones"
+    label_singular: "Publicación"
+    description: "Artículos, análisis y documentos de la Dirección de Investigaciones."
+    folder: "src/content/publicaciones"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{fecha}} · {{title}}"
+    sortable_fields: ["fecha", "title", "area"]
+    view_filters:
+      - { label: "Destacadas", field: "destacado", pattern: true }
+      - { label: "En inglés", field: "idioma", pattern: "en" }
+    fields:
+      - { name: "title", label: "Título", widget: "string" }
+      - { name: "resumen", label: "Bajada / resumen", widget: "text", hint: "Aparece en los listados y al compartir en redes." }
+      - name: "area"
+        label: "Área de trabajo"
+        widget: "relation"
+        collection: "areas"
+        search_fields: ["nombre"]
+        value_field: "nombre"
+        display_fields: ["nombre"]
+      - name: "autor"
+        label: "Autor/a"
+        widget: "relation"
+        collection: "equipo"
+        search_fields: ["nombre"]
+        value_field: "{{slug}}"
+        display_fields: ["nombre"]
+      - name: "programa"
+        label: "Programa (opcional)"
+        widget: "relation"
+        required: false
+        collection: "programas"
+        search_fields: ["nombre"]
+        value_field: "nombre"
+        display_fields: ["nombre"]
+      - { name: "fecha", label: "Fecha", widget: "datetime", format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+      - { name: "idioma", label: "Idioma", widget: "select", options: ["es", "en"], default: "es" }
+      - { name: "tiempo_lectura", label: "Tiempo de lectura (min)", widget: "number", value_type: "int", required: false }
+      - { name: "destacado", label: "Destacar en el Home", widget: "boolean", default: false }
+      - { name: "portada", label: "Imagen de portada", widget: "image", required: false }
+      - { name: "epigrafe", label: "Epígrafe / crédito de la foto", widget: "string", required: false }
+      - { name: "body", label: "Cuerpo del artículo", widget: "markdown" }
+
+  # ───────────────────────── EQUIPO ─────────────────────────
+  - name: "equipo"
+    label: "Equipo"
+    label_singular: "Miembro"
+    description: "Direcciones, investigadores, voluntarios y consejo asesor."
+    folder: "src/content/equipo"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{nombre}} — {{rol}}"
+    sortable_fields: ["nombre", "categoria"]
+    fields:
+      - { name: "nombre", label: "Nombre y apellido", widget: "string" }
+      - { name: "foto", label: "Foto", widget: "image", required: false }
+      - { name: "rol", label: "Cargo / rol", widget: "string" }
+      - name: "categoria"
+        label: "Categoría"
+        widget: "select"
+        options: ["Dirección", "Investigadores", "Voluntarios", "Consejo asesor"]
+      - name: "areas"
+        label: "Áreas"
+        widget: "relation"
+        multiple: true
+        required: false
+        collection: "areas"
+        search_fields: ["nombre"]
+        value_field: "nombre"
+        display_fields: ["nombre"]
+      - { name: "linkedin", label: "LinkedIn (URL)", widget: "string", required: false }
+      - { name: "email", label: "Email", widget: "string", required: false }
+      - { name: "web", label: "Sitio web (URL)", widget: "string", required: false }
+      - { name: "activo", label: "Activo (mostrar en el sitio)", widget: "boolean", default: true, hint: "Desactivá para archivar a alguien que dejó el centro, sin romper sus artículos." }
+      - { name: "body", label: "Bio", widget: "markdown", required: false }
+
+  # ───────────────────────── ÁREAS ─────────────────────────
+  - name: "areas"
+    label: "Áreas de trabajo"
+    label_singular: "Área"
+    folder: "src/content/areas"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{numero}} · {{nombre}}"
+    sortable_fields: ["numero", "nombre"]
+    fields:
+      - { name: "nombre", label: "Nombre", widget: "string" }
+      - { name: "numero", label: "Número (orden)", widget: "number", value_type: "int" }
+      - { name: "resumen", label: "Resumen corto", widget: "string", hint: "Una línea para la grilla del Home." }
+      - { name: "body", label: "Descripción", widget: "markdown", required: false }
+
+  # ───────────────────────── PROGRAMAS ─────────────────────────
+  - name: "programas"
+    label: "Programas"
+    label_singular: "Programa"
+    folder: "src/content/programas"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{nombre}} ({{estado}})"
+    fields:
+      - { name: "nombre", label: "Nombre", widget: "string" }
+      - { name: "estado", label: "Estado", widget: "select", options: ["Activo", "Próximamente", "Archivado"], default: "Activo" }
+      - { name: "resumen", label: "Resumen", widget: "text" }
+      - { name: "color", label: "Color de acento", widget: "color", required: false, hint: "Cada programa puede tener su propio acento en el hero." }
+      - { name: "portada", label: "Imagen", widget: "image", required: false }
+      - { name: "body", label: "Contenido de la landing", widget: "markdown", required: false }

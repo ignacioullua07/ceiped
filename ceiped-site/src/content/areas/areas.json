@@ -1,0 +1,5 @@
+{
+  "layout": "area.njk",
+  "tags": "areas",
+  "permalink": "/areas/{{ page.fileSlug }}/"
+}

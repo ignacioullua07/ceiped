@@ -1,0 +1,42 @@
+---
+layout: base.njk
+---
+<div class="wrap">
+  <nav class="crumb" style="padding-top:30px"><a href="/">Inicio</a><span class="sep">›</span><a href="/equipo/">Equipo</a><span class="sep">›</span>{{ nombre }}</nav>
+  <div class="profile">
+    <div class="pcol">
+      {% if foto %}<img class="pic" src="{{ foto }}" alt="{{ nombre }}" style="object-fit:cover">{% else %}<span class="pic"></span>{% endif %}
+      <div class="links">
+        {% if linkedin %}<a href="{{ linkedin }}"><span class="ic">in</span>LinkedIn</a>{% endif %}
+        {% if email %}<a href="mailto:{{ email }}"><span class="ic">✉</span>Escribir</a>{% endif %}
+        {% if web %}<a href="{{ web }}"><span class="ic">web</span>Sitio web</a>{% endif %}
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">{{ categoria }}</p>
+      <h1>{{ nombre }}</h1>
+      <p class="dek" style="font-size:18px">{{ rol }}</p>
+      {% if areas | length %}
+      <div class="ptags">{% for ar in areas %}<span class="chip">{{ ar }}</span>{% endfor %}</div>
+      {% endif %}
+      <div class="bio">{{ content | safe }}</div>
+    </div>
+  </div>
+
+  {% set suyas = collections.publicaciones | byAuthor(page.fileSlug) %}
+  {% if suyas | length %}
+  <section class="section-block" style="border-top:1px solid var(--line);margin-top:14px">
+    <div class="block-head"><h2>Publicaciones de {{ nombre.split(" ")[0] }}</h2><span class="meta">{{ suyas | length }} publicaciones</span></div>
+    <div class="cards3">
+      {% for p in suyas | limit(6) %}
+      <a class="card" href="{{ p.url }}">
+        {% if p.data.portada %}<img src="{{ p.data.portada }}" alt="" style="width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--line)">{% else %}<div class="ph" style="aspect-ratio:3/2;width:100%"><span>{{ p.data.area }}</span></div>{% endif %}
+        <p class="eyebrow">{{ p.data.area }}</p>
+        <h3>{{ p.data.title }}</h3>
+        <div class="meta">{{ p.data.fecha | fecha }}{% if p.data.tiempo_lectura %} · {{ p.data.tiempo_lectura }} min{% endif %}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>

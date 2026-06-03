@@ -1,0 +1,21 @@
+---
+layout: base.njk
+---
+<section class="prog-hero"{% if color %} style="background:{{ color }}"{% endif %}>
+  <div class="wrap">
+    <p class="eyebrow">{{ estado }}</p>
+    <h1>{{ nombre }}</h1>
+    <p>{{ resumen }}</p>
+    <div class="cta-row">
+      <a class="btn light" href="#">Sumarme</a>
+      <a class="btn ondark" href="/publicaciones/">Ver análisis</a>
+    </div>
+  </div>
+</section>
+<div class="wrap">
+  {% if content %}
+  <section class="section-block">
+    <div class="bio" style="max-width:68ch;font-family:var(--serif);font-size:18px;line-height:1.6">{{ content | safe }}</div>
+  </section>
+  {% endif %}
+</div>

@@ -1,0 +1,32 @@
+---
+layout: base.njk
+permalink: "/equipo/"
+title: "Equipo"
+---
+{% set cats = ["Dirección", "Investigadores", "Voluntarios", "Consejo asesor"] %}
+<section class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Quiénes somos</p>
+    <h1>Equipo</h1>
+    <p class="dek">Direcciones, investigadores y voluntarios que hacen posible el trabajo del CEIPeD en las seis áreas de investigación.</p>
+  </div>
+</section>
+<div class="wrap">
+  {% for cat in cats %}
+  {% set miembros = collections.equipo | byCategoria(cat) %}
+  {% if miembros | length %}
+  <section class="section-block">
+    <div class="block-head"><h2>{{ cat }}</h2><span class="meta">{{ miembros | length }} {{ "persona" if miembros | length == 1 else "personas" }}</span></div>
+    <div class="{{ 'dir-grid' if cat == 'Dirección' else 'people-grid' }}">
+      {% for m in miembros %}
+      <a class="person" href="{{ m.url }}">
+        {% if m.data.foto %}<img class="pic" src="{{ m.data.foto }}" alt="{{ m.data.nombre }}" style="object-fit:cover">{% else %}<span class="pic"></span>{% endif %}
+        <b>{{ m.data.nombre }}</b>
+        <div class="role">{{ m.data.rol }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  {% endfor %}
+</div>
